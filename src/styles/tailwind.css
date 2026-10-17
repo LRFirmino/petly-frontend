@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --green-900: #143c32;
+    --green-800: #1b4e40;
+    --green-600: #2f7661;
+    --green-100: #dceee7;
+    --text-main: #24332f;
+    --bg-surface: #f4f7f5;
+  }
+}
+
+/* Custom scrollbar and polish */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
