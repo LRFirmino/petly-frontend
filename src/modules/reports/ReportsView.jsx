@@ -43,6 +43,27 @@ export default function ReportsView() {
 
   const periodLabel = PERIODS.find((item) => item.months === period)?.label ?? `Últimos ${period} meses`;
 
+  function renderRanking(items, emptyTitle) {
+    if (items.length === 0) {
+      return <EmptyState title={emptyTitle} />;
+    }
+    return items.map((item, index) => (
+      <div className="ranking-row" key={item.name}>
+        <span>{index + 1}</span>
+        <div className={`combo-icon ${toneFor(index)}`}>
+          <Icon name={RANKING_ICONS[index % RANKING_ICONS.length]} size={17} />
+        </div>
+        <div>
+          <strong>{item.name}</strong>
+          <i>
+            <b style={{ width: `${item.sharePct}%` }} />
+          </i>
+        </div>
+        <span>{item.sharePct}%</span>
+      </div>
+    ));
+  }
+
   function exportCsv() {
     if (!data) {
       return;
@@ -58,6 +79,9 @@ export default function ReportsView() {
       [],
       ['Serviço', 'Participação (%)', 'Receita'],
       ...data.services.map((service) => [service.name, String(service.sharePct), String(service.revenue)]),
+      [],
+      ['Combo', 'Participação (%)', 'Receita'],
+      ...(data.combos ?? []).map((combo) => [combo.name, String(combo.sharePct), String(combo.revenue)]),
     ];
     const csv = rows
       .map((row) => row.map((value) => `"${String(value ?? '').replace(/"/g, '""')}"`).join(';'))
@@ -146,25 +170,18 @@ export default function ReportsView() {
                 </div>
               </div>
 
-              {data.services.length === 0 ? (
-                <EmptyState title="Sem dados de serviços no período." />
-              ) : (
-                data.services.map((item, index) => (
-                  <div className="ranking-row" key={item.name}>
-                    <span>{index + 1}</span>
-                    <div className={`combo-icon ${toneFor(index)}`}>
-                      <Icon name={RANKING_ICONS[index % RANKING_ICONS.length]} size={17} />
-                    </div>
-                    <div>
-                      <strong>{item.name}</strong>
-                      <i>
-                        <b style={{ width: `${item.sharePct}%` }} />
-                      </i>
-                    </div>
-                    <span>{item.sharePct}%</span>
-                  </div>
-                ))
-              )}
+              {renderRanking(data.services, 'Sem dados de serviços no período.')}
+            </section>
+
+            <section className="workspace-card service-ranking">
+              <div className="card-heading">
+                <div>
+                  <h2>Combos mais vendidos</h2>
+                  <p>Participação no faturamento</p>
+                </div>
+              </div>
+
+              {renderRanking(data.combos ?? [], 'Sem dados de combos no período.')}
             </section>
           </div>
         </>

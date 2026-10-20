@@ -17,8 +17,8 @@ function todayIso() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
-function durationMinutesOf(service) {
-  const value = service?.durationMinutes;
+function durationMinutesOf(item) {
+  const value = item?.durationMinutes;
   return value && value > 0 ? value : 60;
 }
 
@@ -33,17 +33,21 @@ function hhmm(date) {
 function AppointmentModal({ onClose, onConfirm }) {
   const { data: pets, loading: petsLoading, error: petsError, reload: reloadPets } = useApi(() => api.pets());
   const { data: services, loading: servicesLoading, error: servicesError, reload: reloadServices } = useApi(() => api.services());
+  const { data: combos, loading: combosLoading, error: combosError, reload: reloadCombos } = useApi(() => api.combos());
   const { data: team, loading: teamLoading, error: teamError, reload: reloadTeam } = useApi(() => api.team());
 
   const [clientId, setClientId] = useState('');
   const [petId, setPetId] = useState('');
-  const [serviceId, setServiceId] = useState('');
+  const [itemType, setItemType] = useState('SERVICE');
+  const [itemId, setItemId] = useState('');
   const [size, setSize] = useState('MEDIUM');
   const [date, setDate] = useState(todayIso());
   const [time, setTime] = useState('10:30');
   const [staffName, setStaffName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+
+  const items = itemType === 'COMBO' ? (combos ?? []) : (services ?? []);
 
   useEffect(() => {
     if (pets?.length && !petId) {
@@ -54,10 +58,10 @@ function AppointmentModal({ onClose, onConfirm }) {
   }, [pets, petId]);
 
   useEffect(() => {
-    if (services?.length && !serviceId) {
-      setServiceId(String(services[0].id));
+    if (items.length && !items.some((item) => String(item.id) === itemId)) {
+      setItemId(String(items[0].id));
     }
-  }, [services, serviceId]);
+  }, [items, itemId]);
 
   useEffect(() => {
     if (team?.length && !staffName) {
@@ -65,18 +69,18 @@ function AppointmentModal({ onClose, onConfirm }) {
     }
   }, [team, staffName]);
 
-  const selectedService = useMemo(
-    () => services?.find((service) => String(service.id) === serviceId) ?? null,
-    [services, serviceId],
+  const selectedItem = useMemo(
+    () => items.find((item) => String(item.id) === itemId) ?? null,
+    [items, itemId],
   );
 
   const price = useMemo(() => {
-    if (!selectedService) {
+    if (!selectedItem) {
       return null;
     }
     const index = SIZE_KEYS.indexOf(size);
-    return index >= 0 ? selectedService.prices?.[index] : null;
-  }, [selectedService, size]);
+    return index >= 0 ? selectedItem.prices?.[index] : null;
+  }, [selectedItem, size]);
 
   // Disponibilidade do profissional no dia escolhido (o backend revalida).
   const dayAppointments = useApi(
@@ -101,9 +105,9 @@ function AppointmentModal({ onClose, onConfirm }) {
       return null;
     }
     const start = new Date(`${date}T${time}:00`);
-    const end = new Date(start.getTime() + durationMinutesOf(selectedService) * 60000);
+    const end = new Date(start.getTime() + durationMinutesOf(selectedItem) * 60000);
     return busySlots.find((slot) => rangesOverlap(start, end, slot.start, slot.end)) ?? null;
-  }, [date, time, staffName, selectedService, busySlots]);
+  }, [date, time, staffName, selectedItem, busySlots]);
 
   function handlePetChange(value) {
     setPetId(value);
@@ -114,9 +118,14 @@ function AppointmentModal({ onClose, onConfirm }) {
     }
   }
 
+  function handleItemTypeChange(value) {
+    setItemType(value);
+    setItemId('');
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
-    if (!clientId || !selectedService || !date || !time) {
+    if (!clientId || !selectedItem || !date || !time) {
       setError('Preencha todos os campos para confirmar o agendamento.');
       return;
     }
@@ -132,11 +141,13 @@ function AppointmentModal({ onClose, onConfirm }) {
       await api.createAppointment({
         clientId: Number(clientId),
         petId: petId ? Number(petId) : null,
-        service: selectedService.name,
+        itemType,
+        itemId: Number(itemId),
+        service: selectedItem.name,
         scheduledAt: `${date}T${time}:00`,
         status: 'SCHEDULED',
         staffName: staffName || null,
-        durationMinutes: selectedService.durationMinutes ?? null,
+        durationMinutes: selectedItem.durationMinutes ?? null,
         price,
       });
       onConfirm();
@@ -147,10 +158,10 @@ function AppointmentModal({ onClose, onConfirm }) {
     }
   }
 
-  const loading = petsLoading || servicesLoading || teamLoading;
-  const loadError = petsError || servicesError || teamError;
+  const loading = petsLoading || servicesLoading || combosLoading || teamLoading;
+  const loadError = petsError || servicesError || combosError || teamError;
   const hasPets = (pets?.length ?? 0) > 0;
-  const hasServices = (services?.length ?? 0) > 0;
+  const hasItems = (services?.length ?? 0) > 0 || (combos?.length ?? 0) > 0;
 
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
@@ -180,10 +191,11 @@ function AppointmentModal({ onClose, onConfirm }) {
             onRetry={() => {
               reloadPets();
               reloadServices();
+              reloadCombos();
               reloadTeam();
             }}
           />
-        ) : !hasPets || !hasServices ? (
+        ) : !hasPets || !hasItems ? (
           <div className="data-state">
             <strong>Cadastre um cliente e um serviço primeiro.</strong>
             <span>É preciso ter ao menos um pet e um serviço para agendar.</span>
@@ -203,21 +215,41 @@ function AppointmentModal({ onClose, onConfirm }) {
 
             <div className="form-row">
               <label>
-                Serviço
-                <select value={serviceId} onChange={(event) => setServiceId(event.target.value)}>
-                  {services.map((service) => (
-                    <option key={service.id} value={service.id}>
-                      {service.name}
+                Tipo
+                <select value={itemType} onChange={(event) => handleItemTypeChange(event.target.value)}>
+                  <option value="SERVICE">Serviço</option>
+                  <option value="COMBO">Combo</option>
+                </select>
+              </label>
+              <label>
+                {itemType === 'COMBO' ? 'Combo' : 'Serviço'}
+                <select value={itemId} onChange={(event) => setItemId(event.target.value)}>
+                  {items.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
                     </option>
                   ))}
                 </select>
               </label>
+            </div>
+
+            <div className="form-row">
               <label>
                 Porte
                 <select value={size} onChange={(event) => setSize(event.target.value)}>
                   {SIZE_KEYS.map((key, index) => (
                     <option key={key} value={key}>
                       {SIZE_COLUMNS[index]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Profissional
+                <select value={staffName} onChange={(event) => setStaffName(event.target.value)}>
+                  {team.map((member) => (
+                    <option key={member.id} value={member.name}>
+                      {member.name}
                     </option>
                   ))}
                 </select>
@@ -235,20 +267,9 @@ function AppointmentModal({ onClose, onConfirm }) {
               </label>
             </div>
 
-            <label>
-              Profissional
-              <select value={staffName} onChange={(event) => setStaffName(event.target.value)}>
-                {team.map((member) => (
-                  <option key={member.id} value={member.name}>
-                    {member.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            {selectedService ? (
+            {selectedItem ? (
               <p className="modal-hint">
-                Duração: {selectedService.durationMinutes ?? '—'} min · Valor: {money(price, 0)}
+                Duração: {selectedItem.durationMinutes ?? '—'} min · Valor: {money(price, 0)}
               </p>
             ) : null}
 
