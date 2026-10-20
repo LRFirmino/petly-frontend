@@ -60,6 +60,8 @@ export function appointmentPayload(item, overrides = {}) {
   return {
     clientId: item.clientId,
     petId: item.petId,
+    itemType: item.itemType ?? null,
+    itemId: item.itemId ?? null,
     service: item.service,
     scheduledAt: item.scheduledAt,
     status: item.status,

@@ -14,7 +14,7 @@ const SERVICE_ICONS = ['paw', 'services', 'sparkles', 'sparkles'];
 const COMBO_ICONS = ['paw', 'sparkles', 'services'];
 
 const EMPTY_SERVICE = { name: '', description: '', durationMinutes: 60, priceSmall: '', priceMedium: '', priceLarge: '' };
-const EMPTY_COMBO = { name: '', description: '', priceFrom: '', popularity: 0 };
+const EMPTY_COMBO = { name: '', description: '', durationMinutes: 90, priceSmall: '', priceMedium: '', priceLarge: '' };
 
 export default function ServicesView() {
   const [params, setParams] = useSearchParams();
@@ -77,8 +77,10 @@ export default function ServicesView() {
     setComboForm({
       name: combo.name ?? '',
       description: combo.description ?? '',
-      priceFrom: combo.priceFrom ?? '',
-      popularity: combo.popularity ?? 0,
+      durationMinutes: combo.durationMinutes ?? '',
+      priceSmall: combo.prices?.[0] ?? '',
+      priceMedium: combo.prices?.[1] ?? '',
+      priceLarge: combo.prices?.[2] ?? '',
     });
     setError(null);
     setComboModal({ mode: 'edit', combo });
@@ -122,8 +124,10 @@ export default function ServicesView() {
     const payload = {
       name: comboForm.name,
       description: comboForm.description || null,
-      priceFrom: numberOrNull(comboForm.priceFrom),
-      popularity: numberOrNull(comboForm.popularity),
+      durationMinutes: numberOrNull(comboForm.durationMinutes),
+      priceSmall: numberOrNull(comboForm.priceSmall),
+      priceMedium: numberOrNull(comboForm.priceMedium),
+      priceLarge: numberOrNull(comboForm.priceLarge),
     };
     try {
       if (comboModal.mode === 'create') {
@@ -278,18 +282,20 @@ export default function ServicesView() {
                 <h2>{combo.name}</h2>
                 <p>{combo.description}</p>
                 <div className="duration">
-                  <Icon name="sparkles" size={14} />
-                  {combo.popularity ?? 0} vendas
+                  <Icon name="clock" size={14} />
+                  {combo.durationMinutes ?? '—'} min
                 </div>
                 <div className="price-table">
-                  <div>
-                    <span>Combo</span>
-                    <strong>{money(combo.priceFrom, 0)}</strong>
-                  </div>
+                  {SIZE_COLUMNS.map((label, priceIndex) => (
+                    <div key={label}>
+                      <span>{label}</span>
+                      <strong>{money(combo.prices?.[priceIndex], 0)}</strong>
+                    </div>
+                  ))}
                 </div>
                 <div className="service-footer">
                   <span>
-                    <i></i>Disponível
+                    <i></i>{combo.popularity ?? 0} vendas
                   </span>
                   <button onClick={() => openEditCombo(combo)}>Editar</button>
                 </div>
@@ -422,24 +428,44 @@ export default function ServicesView() {
               placeholder="Banho, tosa e unhas"
             />
           </label>
+          <label>
+            Duração (min)
+            <input
+              type="number"
+              min="0"
+              value={comboForm.durationMinutes}
+              onChange={(event) => setComboForm({ ...comboForm, durationMinutes: event.target.value })}
+            />
+          </label>
           <div className="form-row">
             <label>
-              A partir de (R$)
+              Pequeno (R$)
               <input
                 type="number"
                 min="0"
                 step="0.01"
-                value={comboForm.priceFrom}
-                onChange={(event) => setComboForm({ ...comboForm, priceFrom: event.target.value })}
+                value={comboForm.priceSmall}
+                onChange={(event) => setComboForm({ ...comboForm, priceSmall: event.target.value })}
               />
             </label>
             <label>
-              Vendas
+              Médio (R$)
               <input
                 type="number"
                 min="0"
-                value={comboForm.popularity}
-                onChange={(event) => setComboForm({ ...comboForm, popularity: event.target.value })}
+                step="0.01"
+                value={comboForm.priceMedium}
+                onChange={(event) => setComboForm({ ...comboForm, priceMedium: event.target.value })}
+              />
+            </label>
+            <label>
+              Grande (R$)
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={comboForm.priceLarge}
+                onChange={(event) => setComboForm({ ...comboForm, priceLarge: event.target.value })}
               />
             </label>
           </div>
