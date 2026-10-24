@@ -231,8 +231,8 @@ export default function AgendaView() {
             </div>
 
             {viewMode === 'day' ? (
-              <div className="workspace-toolbar" style={{ minHeight: 40, padding: '6px 18px' }}>
-                <strong style={{ fontSize: 10 }}>{dayNumberLabel}</strong>
+              <div className="workspace-toolbar" style={{ minHeight: 56, padding: '6px 18px' }}>
+                <strong style={{ fontSize: 'var(--text-base)' }}>{dayNumberLabel}</strong>
                 <button className="outline-button" onClick={() => setViewMode('week')}>
                   Ver semana completa
                 </button>

@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 170px;
+  min-width: 190px;
   padding: 6px;
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -34,13 +34,13 @@
   align-items: center;
   gap: 8px;
   width: 100%;
-  height: 34px;
+  height: 38px;
   padding: 0 10px;
   border: 0;
   border-radius: 8px;
   background: transparent;
   color: #45534e;
-  font-size: 10px;
+  font-size: var(--text-base);
   font-weight: 600;
   text-align: left;
 }
@@ -74,7 +74,7 @@
   top: calc(100% + 12px);
   right: 0;
   z-index: 45;
-  width: 300px;
+  width: 320px;
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: 14px;
@@ -85,7 +85,7 @@
 .dropdown-panel > h4 {
   margin: 0 0 8px;
   color: #9aa49f;
-  font-size: 9px;
+  font-size: var(--text-2xs);
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -119,25 +119,25 @@
 .notif-item strong {
   display: block;
   color: #33443e;
-  font-size: 10px;
+  font-size: var(--text-base);
 }
 
 .notif-item span {
   display: block;
   margin-top: 2px;
   color: #929d98;
-  font-size: 9px;
+  font-size: var(--text-sm);
 }
 
 .notif-empty {
   padding: 14px 8px;
   color: #929d98;
-  font-size: 10px;
+  font-size: var(--text-base);
   text-align: center;
 }
 
 .user-panel {
-  width: 246px;
+  width: 264px;
 }
 
 .user-panel .user-head {
@@ -152,14 +152,14 @@
 .user-panel .user-head strong {
   display: block;
   color: #2b4039;
-  font-size: 11px;
+  font-size: var(--text-md);
 }
 
 .user-panel .user-head span {
   display: block;
   margin-top: 2px;
   color: #929d98;
-  font-size: 9px;
+  font-size: var(--text-sm);
 }
 
 .user-panel .user-actions {
@@ -173,13 +173,13 @@
   align-items: center;
   gap: 8px;
   width: 100%;
-  height: 34px;
+  height: 38px;
   padding: 0 10px;
   border: 0;
   border-radius: 8px;
   background: transparent;
   color: #45534e;
-  font-size: 10px;
+  font-size: var(--text-base);
   font-weight: 600;
   text-align: left;
 }
@@ -245,18 +245,18 @@
 .search-item strong {
   display: block;
   color: #33443e;
-  font-size: 10px;
+  font-size: var(--text-base);
 }
 
 .search-item span {
-  font-size: 9px;
+  font-size: var(--text-sm);
   color: #959f9b;
 }
 
 .search-empty {
   padding: 16px;
   color: #929d98;
-  font-size: 10px;
+  font-size: var(--text-base);
   text-align: center;
 }
 
@@ -307,14 +307,14 @@
 
 .modal-detail span {
   color: #929d98;
-  font-size: 9px;
+  font-size: var(--text-2xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .modal-detail strong {
   color: #33443e;
-  font-size: 11px;
+  font-size: var(--text-md);
 }
 
 .outline-button.danger {
@@ -328,7 +328,7 @@
 
 .modal textarea {
   width: 100%;
-  min-height: 66px;
+  min-height: 84px;
   padding: 11px 12px;
   border: 1px solid #dfe6e3;
   border-radius: 9px;
@@ -336,7 +336,7 @@
   background: #fafcfb;
   color: #34433e;
   font-family: inherit;
-  font-size: 11px;
+  font-size: var(--text-md);
   resize: vertical;
 }
 
@@ -357,7 +357,7 @@
 .confirm-message {
   margin: 0;
   color: #4c5a55;
-  font-size: 11px;
+  font-size: var(--text-md);
   line-height: 1.6;
 }
 
@@ -370,7 +370,7 @@
 
 .slot-availability > span {
   color: #929d98;
-  font-size: 9px;
+  font-size: var(--text-2xs);
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -387,7 +387,7 @@
   border-radius: 7px;
   background: #eef3f1;
   color: #4b6b60;
-  font-size: 9px;
+  font-size: var(--text-sm);
   font-weight: 700;
 }
 
@@ -410,14 +410,14 @@
 .users-toolbar strong {
   display: block;
   color: #24352f;
-  font-size: 12px;
+  font-size: var(--text-lg);
 }
 
 .users-toolbar span {
   display: block;
   margin-top: 3px;
   color: #929d98;
-  font-size: 9px;
+  font-size: var(--text-sm);
 }
 
 .users-head,
@@ -430,9 +430,9 @@
 }
 
 .users-head {
-  height: 36px;
+  height: 42px;
   color: #929d98;
-  font-size: 7.5px;
+  font-size: var(--text-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -440,7 +440,7 @@
 }
 
 .user-row {
-  min-height: 62px;
+  min-height: 70px;
   border-bottom: 1px solid #edf1ef;
 }
 
@@ -457,7 +457,7 @@
 
 .user-name strong {
   color: #37443f;
-  font-size: 9.5px;
+  font-size: var(--text-base);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -465,7 +465,7 @@
 
 .user-email {
   color: #7b8782;
-  font-size: 9px;
+  font-size: var(--text-sm);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -476,7 +476,7 @@
   width: max-content;
   padding: 4px 8px;
   border-radius: 6px;
-  font-size: 7.5px;
+  font-size: var(--text-xs);
   font-weight: 800;
 }
 
@@ -515,7 +515,7 @@
 .platform-brand strong {
   display: block;
   color: #1d312b;
-  font-size: 15px;
+  font-size: var(--text-xl);
   letter-spacing: -0.4px;
 }
 
@@ -523,7 +523,7 @@
   display: block;
   margin-top: 2px;
   color: #6c8c81;
-  font-size: 9px;
+  font-size: var(--text-sm);
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -539,9 +539,9 @@
 }
 
 .platform-grid-head {
-  height: 42px;
+  height: 46px;
   color: #929d98;
-  font-size: 7.5px;
+  font-size: var(--text-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -550,7 +550,7 @@
 }
 
 .platform-grid-row {
-  min-height: 70px;
+  min-height: 78px;
   border-bottom: 1px solid #edf1ef;
 }
 
@@ -561,20 +561,20 @@
 .shop-name strong {
   display: block;
   color: #2b4039;
-  font-size: 10px;
+  font-size: var(--text-base);
 }
 
 .shop-name span {
   display: block;
   margin-top: 3px;
   color: #929d98;
-  font-size: 8px;
+  font-size: var(--text-xs);
 }
 
 .shop-contact span {
   display: block;
   color: #7b8782;
-  font-size: 8.5px;
+  font-size: var(--text-xs);
 }
 
 .shop-contact span + span {
@@ -583,13 +583,13 @@
 
 .shop-metric strong {
   color: #3a4a44;
-  font-size: 12px;
+  font-size: var(--text-lg);
 }
 
 .form-section {
   margin: 6px 0 0;
   color: #7b8782;
-  font-size: 9px;
+  font-size: var(--text-2xs);
   font-weight: 800;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -598,7 +598,7 @@
 .platform-users {
   display: flex;
   flex-direction: column;
-  max-height: 210px;
+  max-height: 240px;
   overflow: auto;
 }
 
@@ -607,7 +607,7 @@
   grid-template-columns: 26px 1fr auto;
   align-items: center;
   gap: 10px;
-  padding: 9px 4px;
+  padding: 10px 4px;
   border-bottom: 1px solid #f1f4f3;
 }
 
@@ -618,14 +618,14 @@
 .platform-user strong {
   display: block;
   color: #37443f;
-  font-size: 9.5px;
+  font-size: var(--text-base);
 }
 
 .platform-user span {
   display: block;
   margin-top: 2px;
   color: #929d98;
-  font-size: 8px;
+  font-size: var(--text-xs);
 }
 
 .platform-new-user {
@@ -640,7 +640,7 @@
 .platform-new-user h4 {
   margin: 0;
   color: #7b8782;
-  font-size: 9px;
+  font-size: var(--text-2xs);
   font-weight: 800;
   letter-spacing: 0.09em;
   text-transform: uppercase;
